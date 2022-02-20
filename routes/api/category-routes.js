@@ -23,6 +23,10 @@ router.get("/:id", async (req, res) => {
     const categoryData = await Category.findByPk(req.params.id, {
       include: [{ model: Product }],
     });
+    if (!categoryData) {
+      res.status(404).json({ message: "Please enter valid category ID!" });
+      return;
+    }
     res.status(200).json(categoryData);
   } catch (err) {
     res.status(500).json(err);
@@ -32,9 +36,12 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   // create a new category
   try {
-    const categoryData = await Category.create(req.body);
+    const categoryData = await Category.create(
+      {
+        category_name: req.body.category_name
+      });
     if (!categoryData) {
-      res.status(404).json({ message: "Please add valid category!" });
+      res.status(404).json({ message: "Please enter valid category ID!" });
       return;
     }
     res.status(200).json(categoryData);
@@ -57,7 +64,7 @@ router.put("/:id", async (req, res) => {
       }
     );
     if (!categoryData) {
-      res.status(404).json({ message: "Please enter valid category!" });
+      res.status(404).json({ message: "Please enter valid category ID!" });
       return;
     }
     res.status(200).json(categoryData);
@@ -77,7 +84,7 @@ router.delete("/:id", async (req, res) => {
       }
     );
     if (!categoryData) {
-      res.status(404).json({ message: "Please enter valid category!" });
+      res.status(404).json({ message: "Please enter valid category ID!" });
       return;
     }
     res.status(200).json(categoryData);
